@@ -50,8 +50,8 @@ class StormpathAccountService extends UserAccountService {
 //    CustomData customData = account.getCustomData();
 //    customData.put("favoriteColor", "white");
     try {
-      val acct: Account = application.createAccount(account)
-      UserAccount(acct.getGivenName, acct.getSurname, acct.getEmail, None)
+      val result: Account = application.createAccount(account)
+      UserAccount(result.getGivenName, result.getSurname, result.getEmail, None)
     } catch {
       case e: ResourceException => throw new ResourceException(e)
     }
