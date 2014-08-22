@@ -29,6 +29,10 @@ class StormpathAccountServiceSpec extends Specification {
       stormpath.findAccount("paul.lawler@gmail.com") must not be None
     }
 
+    "authenticate an account" in {
+      stormpath.authenticate("paul.lawler@gmail.com", "pAssw0rd") must not be None
+    }
+
     "delete an account" in {
       val account = stormpath.findAccount("paul.lawler@gmail.com").get
       stormpath.deleteAccount(account)

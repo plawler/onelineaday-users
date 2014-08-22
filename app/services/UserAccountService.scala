@@ -3,6 +3,7 @@ package services
 import java.util
 
 import com.google.inject.Singleton
+import com.stormpath.sdk.authc.UsernamePasswordRequest
 import com.stormpath.sdk.impl.account.DefaultAccount
 import com.stormpath.sdk.resource.ResourceException
 
@@ -27,6 +28,7 @@ trait UserAccountService {
   def createAccount(userAccount: UserAccount): UserAccount
   def findAccount(email: String): Option[UserAccount]
   def deleteAccount(userAccount: UserAccount)
+  def authenticate(email: String, password: String): Option[UserAccount]
 
 }
 
@@ -76,6 +78,17 @@ class StormpathAccountService extends UserAccountService {
       application.getAccounts(queryParams).head.delete()
     } catch {
       case e: NoSuchElementException => Logger.debug(s"No account with email [$userAccount.email] to delete")
+    }
+  }
+
+  override def authenticate(email: String, password: String): Option[UserAccount] = {
+    try {
+      val authRequest = new UsernamePasswordRequest(email, password)
+      val account = application.authenticateAccount(authRequest).getAccount
+      Some(UserAccount(account.getGivenName, account.getSurname, account.getEmail, None))
+    } catch {
+      case e: ResourceException => Logger.error(e.getMessage)
+      None
     }
   }
 
