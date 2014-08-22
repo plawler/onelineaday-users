@@ -2,6 +2,8 @@ package services
 
 import java.util
 
+import com.google.inject.Singleton
+import com.stormpath.sdk.impl.account.DefaultAccount
 import com.stormpath.sdk.resource.ResourceException
 
 import scala.collection.JavaConversions._
@@ -28,11 +30,12 @@ trait UserAccountService {
 
 }
 
+@Singleton
 class StormpathAccountService extends UserAccountService {
 
   lazy val client: Client = {
     val path = System.getProperty("user.home") + "/.stormpath/apiKey.properties"
-    Logger.debug(s"Stormpath props path: $path")
+//    Logger.debug(s"Stormpath props path: $path")
     val apiKey = ApiKeys.builder().setFileLocation(path).build()
     Clients.builder().setApiKey(apiKey).build()
   }
@@ -41,14 +44,12 @@ class StormpathAccountService extends UserAccountService {
     client.getResource("https://api.stormpath.com/v1/applications/6cpZKjY12wrndZxh2cRf1T", classOf[Application])
   }
 
-  override def createAccount(userAccount: UserAccount) = {
+  override def createAccount(userAccount: UserAccount): UserAccount = {
     var account: Account = client.instantiate(classOf[Account])
     account.setGivenName(userAccount.givenName)
     account.setSurname(userAccount.surName)
     account.setEmail(userAccount.email)
     account.setPassword(userAccount.password.get)
-//    CustomData customData = account.getCustomData();
-//    customData.put("favoriteColor", "white");
     try {
       val result: Account = application.createAccount(account)
       UserAccount(result.getGivenName, result.getSurname, result.getEmail, None)
@@ -60,16 +61,22 @@ class StormpathAccountService extends UserAccountService {
   override def findAccount(email: String): Option[UserAccount] = {
     val queryParams = new util.HashMap[String, Object]()
     queryParams.put("email", email)
-
-    val account = application.getAccounts(queryParams).head
-    Some(UserAccount(account.getGivenName, account.getSurname, account.getEmail, None))
+    try {
+      val account = application.getAccounts(queryParams).head // http://alvinalexander.com/scala/how-to-convert-maps-scala-java
+      Some(UserAccount(account.getGivenName, account.getSurname, account.getEmail, None))
+    } catch {
+      case e: NoSuchElementException => None
+    }
   }
 
   override def deleteAccount(userAccount: UserAccount) = {
     val queryParams = new util.HashMap[String, Object]()
     queryParams.put("email", userAccount.email)
-
-    val account = application.getAccounts(queryParams).head
-    account.delete()
+    try {
+      application.getAccounts(queryParams).head.delete()
+    } catch {
+      case e: NoSuchElementException => Logger.debug(s"No account with email [$userAccount.email] to delete")
+    }
   }
+
 }

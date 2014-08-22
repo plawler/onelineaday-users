@@ -32,7 +32,11 @@ class StormpathAccountServiceSpec extends Specification {
     "delete an account" in {
       val account = stormpath.findAccount("paul.lawler@gmail.com").get
       stormpath.deleteAccount(account)
-      stormpath.findAccount("paul.lawler@gmail.com") must throwA[NoSuchElementException]
+      stormpath.findAccount("paul.lawler@gmail.com") mustEqual None
+    }
+
+    "find an account that doesn't exist" in {
+      stormpath.findAccount("doesnot@exist.com") mustEqual None
     }
 
   }
