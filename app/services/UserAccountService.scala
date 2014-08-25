@@ -20,6 +20,7 @@ import play.api.Logger
  */
 
 case class UserAccount(givenName: String, surName: String, email: String, password: Option[String])
+case class Credentials(username: String, password: String)
 
 // may need a StormpathAccount class to hold onto important data specific to the service
 
@@ -28,7 +29,7 @@ trait UserAccountService {
   def createAccount(userAccount: UserAccount): UserAccount
   def findAccount(email: String): Option[UserAccount]
   def deleteAccount(userAccount: UserAccount)
-  def authenticate(email: String, password: String): Option[UserAccount]
+  def authenticate(username: String, password: String): Option[UserAccount]
 
 }
 
@@ -81,9 +82,9 @@ class StormpathAccountService extends UserAccountService {
     }
   }
 
-  override def authenticate(email: String, password: String): Option[UserAccount] = {
+  override def authenticate(username: String, password: String): Option[UserAccount] = {
     try {
-      val authRequest = new UsernamePasswordRequest(email, password)
+      val authRequest = new UsernamePasswordRequest(username, password)
       val account = application.authenticateAccount(authRequest).getAccount
       Some(UserAccount(account.getGivenName, account.getSurname, account.getEmail, None))
     } catch {
