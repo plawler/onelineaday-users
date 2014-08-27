@@ -93,4 +93,82 @@ class StormpathAccountService extends UserAccountService {
     }
   }
 
+  /**
+   * Stormpath Application resource
+   *
+   {
+      "href": "https://api.stormpath.com/v1/applications/6cpZKjY12wrndZxh2cRf1T",
+      "name": "One Line a Day",
+      "description": null,
+      "status": "ENABLED",
+      "tenant": {
+          "href": "https://api.stormpath.com/v1/tenants/3iUCQTn38ZrvSJHz63K6vH"
+      },
+      "defaultAccountStoreMapping": {
+          "href": "https://api.stormpath.com/v1/accountStoreMappings/6cpux00voVDqWC4MtRSpcN"
+      },
+      "defaultGroupStoreMapping": {
+          "href": "https://api.stormpath.com/v1/accountStoreMappings/6cpux00voVDqWC4MtRSpcN"
+      },
+      "customData": {
+          "href": "https://api.stormpath.com/v1/applications/6cpZKjY12wrndZxh2cRf1T/customData"
+      },
+      "accounts": {
+          "href": "https://api.stormpath.com/v1/applications/6cpZKjY12wrndZxh2cRf1T/accounts"
+      },
+      "groups": {
+          "href": "https://api.stormpath.com/v1/applications/6cpZKjY12wrndZxh2cRf1T/groups"
+      },
+      "accountStoreMappings": {
+          "href": "https://api.stormpath.com/v1/applications/6cpZKjY12wrndZxh2cRf1T/accountStoreMappings"
+      },
+      "loginAttempts": {
+          "href": "https://api.stormpath.com/v1/applications/6cpZKjY12wrndZxh2cRf1T/loginAttempts"
+      },
+      "passwordResetTokens": {
+          "href": "https://api.stormpath.com/v1/applications/6cpZKjY12wrndZxh2cRf1T/passwordResetTokens"
+      },
+      "apiKeys": {
+          "href": "https://api.stormpath.com/v1/applications/6cpZKjY12wrndZxh2cRf1T/apiKeys"
+      }
+    }
+   */
+
+  /**
+   * Stormpath Account resource
+   *
+   {
+      "href": "https://api.stormpath.com/v1/accounts/4JnuYzKl93jLKjeNH4tP43",
+      "username": "testUser",
+      "email": "testuser@onelineaday.me",
+      "givenName": "Test",
+      "middleName": null,
+      "surname": "User",
+      "fullName": "Test User",
+      "status": "ENABLED",
+      "emailVerificationToken": null,
+      "customData": {
+          "href": "https://api.stormpath.com/v1/accounts/4JnuYzKl93jLKjeNH4tP43/customData"
+      },
+      "providerData": {
+          "href": "https://api.stormpath.com/v1/accounts/4JnuYzKl93jLKjeNH4tP43/providerData"
+      },
+      "directory": {
+          "href": "https://api.stormpath.com/v1/directories/6cpdemqCOrL0c6NpPaFUk3"
+      },
+      "tenant": {
+          "href": "https://api.stormpath.com/v1/tenants/3iUCQTn38ZrvSJHz63K6vH"
+      },
+      "groups": {
+          "href": "https://api.stormpath.com/v1/accounts/4JnuYzKl93jLKjeNH4tP43/groups"
+      },
+      "groupMemberships": {
+          "href": "https://api.stormpath.com/v1/accounts/4JnuYzKl93jLKjeNH4tP43/groupMemberships"
+      },
+      "apiKeys": {
+          "href": "https://api.stormpath.com/v1/accounts/4JnuYzKl93jLKjeNH4tP43/apiKeys"
+      }
+    }
+   */
+
 }
