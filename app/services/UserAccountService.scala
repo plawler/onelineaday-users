@@ -1,9 +1,11 @@
 package services
 
 import java.util
+import java.util.concurrent.TimeUnit
 
 import com.google.inject.Singleton
 import com.stormpath.sdk.authc.UsernamePasswordRequest
+import com.stormpath.sdk.cache.Caches._
 import com.stormpath.sdk.impl.account.DefaultAccount
 import com.stormpath.sdk.resource.ResourceException
 
@@ -40,15 +42,25 @@ class StormpathAccountService extends UserAccountService {
     val path = System.getProperty("user.home") + "/.stormpath/apiKey.properties"
 //    Logger.debug(s"Stormpath props path: $path")
     val apiKey = ApiKeys.builder().setFileLocation(path).build()
-    Clients.builder().setApiKey(apiKey).build()
+
+    Clients.builder()
+      .setApiKey(apiKey)
+      .setCacheManager(newCacheManager()
+        .withDefaultTimeToLive(1, TimeUnit.DAYS)
+        .withDefaultTimeToIdle(2, TimeUnit.HOURS)
+        .withCache(forResource(classOf[Account])
+          .withTimeToLive(1, TimeUnit.HOURS)
+          .withTimeToIdle(30, TimeUnit.MINUTES))
+        .build()
+      ).build()
   }
 
   lazy val application: Application = {
-    client.getResource("https://api.stormpath.com/v1/applications/6cpZKjY12wrndZxh2cRf1T", classOf[Application])
+    client.getResource("https://api.stormpath.com/v1/applications/6cpZKjY12wrndZxh2cRf1T", classOf[Application]) // todo: configure!!
   }
 
   override def createAccount(userAccount: UserAccount): UserAccount = {
-    var account: Account = client.instantiate(classOf[Account])
+    val account: Account = client.instantiate(classOf[Account])
     account.setGivenName(userAccount.givenName)
     account.setSurname(userAccount.surName)
     account.setEmail(userAccount.email)
